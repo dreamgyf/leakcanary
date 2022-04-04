@@ -58,6 +58,7 @@ jobs:
         with:
           api-level: ${{ matrix.api-level }}
           target: google_apis
+          ram-size: 2048M
           arch: ${{ matrix.arch }}
           script: |
             touch emulator.log                    # create log file
