@@ -1,5 +1,9 @@
 package leakcanary
 
+import android.app.ActivityManager
+import android.app.ActivityManager.MemoryInfo
+import android.content.Context
+import android.util.Log
 import androidx.test.espresso.Espresso.onData
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
@@ -45,6 +49,16 @@ internal class LeakActivityTest {
   fun noLeakOnHome() {
     activityTestRule.launchActivity(null)
     onView(withText("0 Distinct Leaks")).check(matches(isDisplayed()))
+    val appContext = activityTestRule.activity!!.applicationContext
+    val activityManager = appContext.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+    val mem = MemoryInfo()
+    activityManager.getMemoryInfo(mem)
+    Log.d(
+      "LeakActivityTest", "totalMem:${mem.totalMem} " +
+      "availMem:${mem.availMem} " +
+      "threshold: ${mem.threshold} " +
+      "lowMemory:${mem.lowMemory}"
+    )
   }
 
   @Test
